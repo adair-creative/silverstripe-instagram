@@ -84,10 +84,10 @@ namespace AdairCreative {
 				}
 			}
 			else {
-				return false;
+				return null;
 			}
 
-			return false;
+			return null;
 		}
 	}
 }
