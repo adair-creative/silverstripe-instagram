@@ -1,5 +1,5 @@
 # Instagram
-```composer install adair-creative/silverstripe-instagram```
+```composer install adair-creative/instagram```
 
 A simple toolkit that allows for one-click CMS auth for an Instagram account
 
