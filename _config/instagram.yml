@@ -1,0 +1,17 @@
+---
+name: Instagram
+---
+
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.ACG_Instagram:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "ACG_Instagram"
+
+Silverstripe\SiteConfig\SiteConfig:
+  extensions:
+    - AdairCreative\Instagram\AuthControl\Authorize
+
+SilverStripe\Control\Director:
+  rules:
+    'acg_instagram//$Action': 'AdairCreative\Instagram\AuthControl\Endpoint'

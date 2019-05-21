@@ -1,0 +1,15 @@
+{
+	"name": "instagram",
+	"description": "A simple toolkit that allows for one-click CMS auth for an Instagram account",
+	"version": "1",
+	"authors": [
+		{
+			"name": "Jesse Solomon",
+			"email": "jesse@adaircreative.com"
+		},
+		{
+			"name": "Tyler Kidd",
+			"email": "tyler@adaircreative.com"
+		}
+	]
+}
