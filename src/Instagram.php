@@ -61,32 +61,27 @@ namespace AdairCreative {
 			$lastUpdated = $cache->get("last_updated");
 			if ($lastUpdated != null && time() - (int)$lastUpdated < 3600) {
 				return Instagram::arrayToList(json_decode($cache->get("media")));
-				// $items = json_decode($cache->get("media"));
-
-				// $list = ArrayList::create();
-				// foreach($items as $item){
-				// 	$list->push(ArrayData::create(array('Link' => $item)));
-				// }
-
-				// return $items;
 			}
 
 			if ($result != false) {
 				$json = json_decode($result);
-				$media = [];
-			
-				foreach ($json->data as $data) {
-					if (key_exists("images", $data)) {
-						if (key_exists("standard_resolution", $data->images)) {
-							array_push($media, $data->images->standard_resolution->url);
+
+				if (key_exists("data", $json)) {
+					$media = [];
+				
+					foreach ($json->data as $data) {
+						if (key_exists("images", $data)) {
+							if (key_exists("standard_resolution", $data->images)) {
+								array_push($media, $data->images->standard_resolution->url);
+							}
 						}
 					}
+
+					$cache->set("last_updated", time());
+					$cache->set("media", json_encode($media));
+
+					return Instagram::arrayToList($media);
 				}
-
-				$cache->set("last_updated", time());
-				$cache->set("media", json_encode($media));
-
-				return Instagram::arrayToList($media);
 			}
 			else {
 				return false;
