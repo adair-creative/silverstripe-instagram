@@ -50,6 +50,8 @@ namespace AdairCreative {
 		}
 
 		public static function getUserMedia(): ?ArrayList {
+			if (!Instagram::getAccessToken()) return null;
+
 			$cache = Instagram::getCache();
 			$lastUpdated = $cache->get("last_updated");
 			if ($lastUpdated != null && time() - (int)$lastUpdated < 3600) {
