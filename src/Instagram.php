@@ -50,18 +50,18 @@ namespace AdairCreative {
 		}
 
 		public static function getUserMedia(): ?ArrayList {
+			$cache = Instagram::getCache();
+			$lastUpdated = $cache->get("last_updated");
+			if ($lastUpdated != null && time() - (int)$lastUpdated < 3600) {
+				return Instagram::arrayToList(json_decode($cache->get("media")));
+			}
+
 			$ch = curl_init("https://api.instagram.com/v1/users/self/media/recent?access_token=" . Instagram::getAccessToken());
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, Instagram::useSSL());
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, Instagram::useSSL());
 			$result = curl_exec($ch);
 			curl_close($ch);
-
-			$cache = Instagram::getCache();
-			$lastUpdated = $cache->get("last_updated");
-			if ($lastUpdated != null && time() - (int)$lastUpdated < 3600) {
-				return Instagram::arrayToList(json_decode($cache->get("media")));
-			}
 
 			if ($result != false) {
 				$json = json_decode($result);
