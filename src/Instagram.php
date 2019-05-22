@@ -84,6 +84,9 @@ namespace AdairCreative {
 				}
 			}
 			else {
+				if ($mediaCache = $cache->get("media")) {
+					return Instagram::arrayToList(json_decode($mediaCache));
+				}
 				return null;
 			}
 
