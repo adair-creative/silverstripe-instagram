@@ -50,7 +50,7 @@ namespace AdairCreative\Instagram\AuthControl {
 	class Authorize extends DataExtension {
 		public function updateCMSFields(FieldList $fields) {
 			if (($clientId = Instagram::getClientID()) && Instagram::getClientSecret() != "") {
-				$fields->addFieldToTab("Root.Main", new LiteralField("", "<a href='https://api.instagram.com/oauth/authorize/?client_id=" . $clientId . "&response_type=code&redirect_uri=http://local.thadenschool.org/acg_instagram/login'>Log in to Instagram / Change User</a>"));
+				$fields->addFieldToTab("Root.Main", new LiteralField("", "<a href='https://api.instagram.com/oauth/authorize/?client_id=" . $clientId . "&response_type=code&redirect_uri=" . Director::absoluteBaseURL() . "acg_instagram/login'>Log in to Instagram / Change User</a>"));
 			}
 
 			return $fields;
