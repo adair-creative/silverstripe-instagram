@@ -8,14 +8,24 @@ namespace AdairCreative\Instagram\AuthControl {
     use SilverStripe\Control\HTTPRequest;
     use AdairCreative\Instagram;
     use SilverStripe\Dev\Debug;
-    use SilverStripe\Control\Director;
+	use SilverStripe\Control\Director;
+	use SilverStripe\Security\Security;
 
 //
 
 	class Endpoint extends ContentController {
 		private static $allowed_actions = [
-			"login"
+			"login",
+			"clear_cache"
 		];
+
+		public function clear_cache(HTTPRequest $request) {
+			if (Security::getCurrentUser()) {	
+				Instagram::clearCache();
+				return $this->redirectBack("/admin/settings");
+			}
+			$this->redirectBack("/home");
+		}
 
 		public function login(HTTPRequest $request) {
 			if ($code = $request->getVar("code")) {

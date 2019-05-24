@@ -29,6 +29,10 @@ namespace AdairCreative {
 			return new ArrayList($output);
 		}
 
+		public static function clearCache() {
+			Instagram::getCache()->set("media", null);
+		}
+
 		public static function getAccessToken(): ?string {
 			return Instagram::getCache()->get("access_token");
 		}
