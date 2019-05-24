@@ -3,10 +3,6 @@
 
 A simple toolkit that allows for one-click CMS auth for an Instagram account
 
-Q: Why is this one named differently?
-
-A: Because packagist didn't like it, I don't know why
-
 ## How To Use
 ### CMS
 Go to `admin/settings` and click `Log in to Instagram`

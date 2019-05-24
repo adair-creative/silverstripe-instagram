@@ -1,7 +1,7 @@
 {
 	"name": "adair-creative/instagram",
 	"description": "A simple toolkit that allows for one-click CMS auth for an Instagram account",
-	"version": "1.6.1",
+	"version": "1.6.2",
 	"authors": [
 		{
 			"name": "Jesse Solomon",
