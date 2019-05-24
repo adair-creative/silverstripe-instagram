@@ -58,8 +58,8 @@ namespace AdairCreative {
 
 			$cache = Instagram::getCache();
 			$lastUpdated = $cache->get("last_updated");
-			if ($lastUpdated != null && time() - (int)$lastUpdated < 3600) {
-				return Instagram::arrayToList(json_decode($cache->get("media")));
+			if ($mediaCache = $cache->get("media") && $lastUpdated != null && time() - (int)$lastUpdated < 3600) {
+				return Instagram::arrayToList(json_decode($mediaCache));
 			}
 
 			$ch = curl_init("https://api.instagram.com/v1/users/self/media/recent?access_token=" . Instagram::getAccessToken());

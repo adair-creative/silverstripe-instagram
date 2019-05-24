@@ -61,6 +61,7 @@ namespace AdairCreative\Instagram\AuthControl {
 		public function updateCMSFields(FieldList $fields) {
 			if (($clientId = Instagram::getClientID()) && Instagram::getClientSecret() != "") {
 				$fields->addFieldToTab("Root.Main", new LiteralField("", "<a href='https://api.instagram.com/oauth/authorize/?client_id=" . $clientId . "&response_type=code&redirect_uri=" . Director::absoluteBaseURL() . "acg_instagram/login'>Log in to Instagram / Change User</a>"));
+				$fields->addFieldToTab("Root.Main", new LiteralField("", "<a href='/acg_instagram/clear_cache'>Clear Instagram Cache</a>"));
 			}
 
 			return $fields;
