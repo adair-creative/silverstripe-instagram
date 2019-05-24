@@ -58,7 +58,8 @@ namespace AdairCreative {
 
 			$cache = Instagram::getCache();
 			$lastUpdated = $cache->get("last_updated");
-			if ($mediaCache = $cache->get("media") && $lastUpdated != null && time() - (int)$lastUpdated < 3600) {
+			$mediaCache = $cache->get("media");
+			if (is_array($mediaCache) && $lastUpdated != null && time() - (int)$lastUpdated < 3600) {
 				return Instagram::arrayToList(json_decode($mediaCache));
 			}
 
