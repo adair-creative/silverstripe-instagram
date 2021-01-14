@@ -1,6 +1,6 @@
 # Instagram Integration for SilverStripe
 
-```composer install madebyprisma/instagram```
+```composer require madebyprisma/instagram```
 
 A simple toolkit that allows for one-click CMS auth for an Instagram account.
 
