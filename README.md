@@ -1,8 +1,8 @@
 # Instagram Integration for SilverStripe
 
-```composer install adair-creative/instagram```
+```composer install madebyprisma/instagram```
 
-A simple toolkit that allows for one-click CMS auth for an Instagram account
+A simple toolkit that allows for one-click CMS auth for an Instagram account.
 
 ## Getting Started
 
