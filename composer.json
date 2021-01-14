@@ -1,7 +1,6 @@
 {
 	"name": "madebyprisma/instagram",
 	"description": "A simple toolkit that allows for one-click CMS integration with Instagram",
-	"version": "2020.01.14",
 	"authors": [
 		{
 			"name": "Jesse Solomon",
