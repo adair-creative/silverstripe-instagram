@@ -1,15 +1,12 @@
 {
-	"name": "adair-creative/instagram",
-	"description": "A simple toolkit that allows for one-click CMS auth for an Instagram account",
-	"version": "1.6.3",
+	"name": "madebyprisma/instagram",
+	"description": "A simple toolkit that allows for one-click CMS integration with Instagram",
+	"version": "2020.01.14",
 	"authors": [
 		{
 			"name": "Jesse Solomon",
-			"email": "jesse@adaircreative.com"
-		},
-		{
-			"name": "Tyler Kidd",
-			"email": "tyler@adaircreative.com"
+			"homepage": "https://madebyprisma.com",
+			"email": "jesse@madebyprisma.com"
 		}
 	]
 }

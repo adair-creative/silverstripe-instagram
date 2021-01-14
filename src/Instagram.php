@@ -1,103 +1,50 @@
 <?php
 
-namespace AdairCreative {
-	use SilverStripe\Core\Config\Configurable;
-    use SilverStripe\ORM\ArrayList;
-    use SilverStripe\Core\Injector\Injector;
-    use Psr\SimpleCache\CacheInterface;
-    use SilverStripe\Core\Config\Config;
-    use SilverStripe\View\ArrayData;
+namespace Prisma;
 
-//
+use Prisma\Instagram\API;
+use Prisma\Instagram\Auth;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Debug;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
 
-	class Instagram {
-		use Configurable;
+class Instagram {
+	public static function getMedia(int $limit = 5): ArrayList {
+		$cache = Injector::inst()->get(CacheInterface::class . ".Prisma.Instagram");
 
-		private static function getCache() {
-			return Injector::inst()->get(CacheInterface::class . ".ACG_Instagram");
+		if (Controller::curr()->getRequest()->getVar("flush") !== "all" && $cache->has("expiration") && $cache->get("expiration") > time() && $cache->get("media_count") >= $limit) {
+			return $cache->get("media")->limit($limit);
 		}
+		else {
+			$posts = new ArrayList([]);
 
-		private static function arrayToList(array $array): ArrayList {
-			$output = [];
+			function decodeMedia(string $id, bool $is_child): ArrayData {
+				API::get("/$id", $is_child ? ["fields=media_type,media_url"] : ["fields=media_type,media_url,caption,children"], $media);
 
-			foreach ($array as $item) {
-				array_push($output, new ArrayData([
-					"URL" => $item
-				]));
+				return new ArrayData([
+					"Type" => $media->media_type,
+					"URL" => $media->media_url,
+					"Caption" => property_exists($media, "caption") ? $media->caption : "",
+					"Children" => property_exists($media, "children") ? new ArrayList(array_map(function ($child) { return decodeMedia($child->id, true); }, $media->children->data)) : null
+				]);
 			}
 
-			return new ArrayList($output);
-		}
+			if (Auth::valid()) {
+				API::get("/me/media", ["fields=id", "limit=$limit"], $json);
 
-		public static function clearCache() {
-			Instagram::getCache()->set("media", null);
-		}
-
-		public static function getAccessToken(): ?string {
-			return Instagram::getCache()->get("access_token");
-		}
-
-		public static function setAccessToken(string $token) {
-			Instagram::getCache()->set("access_token", $token);
-		}
-
-		public static function getClientID(): ?string {
-			return Config::inst()->get(Instagram::class, "client_id");
-		}
-
-		public static function getClientSecret(): ?string {
-			return Config::inst()->get(Instagram::class, "client_secret");
-		}
-
-		public static function useSSL(): int {
-			return Config::inst()->get(Instagram::class, "use_ssl") != null ? 2 : 0;
-		}
-
-		public static function getUserMedia(): ?ArrayList {
-			if (!Instagram::getAccessToken()) return null;
-
-			$cache = Instagram::getCache();
-			$lastUpdated = $cache->get("last_updated");
-			$mediaCache = $cache->get("media");
-			if (is_array($mediaCache) && $lastUpdated != null && time() - (int)$lastUpdated < 3600) {
-				return Instagram::arrayToList(json_decode($mediaCache));
-			}
-
-			$ch = curl_init("https://api.instagram.com/v1/users/self/media/recent?access_token=" . Instagram::getAccessToken());
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, Instagram::useSSL());
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, Instagram::useSSL());
-			$result = curl_exec($ch);
-			curl_close($ch);
-
-			if ($result != false) {
-				$json = json_decode($result);
-
-				if (key_exists("data", $json)) {
-					$media = [];
-				
-					foreach ($json->data as $data) {
-						if (key_exists("images", $data)) {
-							if (key_exists("standard_resolution", $data->images)) {
-								array_push($media, $data->images->standard_resolution->url);
-							}
-						}
-					}
-
-					$cache->set("last_updated", time());
-					$cache->set("media", json_encode($media));
-
-					return Instagram::arrayToList($media);
+				foreach ($json->data as $post) {
+					$posts->add(decodeMedia($post->id, false));
 				}
 			}
-			else {
-				if ($mediaCache = $cache->get("media")) {
-					return Instagram::arrayToList(json_decode($mediaCache));
-				}
-				return null;
-			}
 
-			return null;
+			$cache->set("expiration", time() + 43200);
+			$cache->set("media", $posts);
+			$cache->set("media_count", $limit);
+
+			return $posts;
 		}
 	}
 }
