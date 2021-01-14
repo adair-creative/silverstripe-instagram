@@ -1,17 +1,17 @@
 ---
-name: Instagram
+Name: instagram
 ---
 
-SilverStripe\Core\Injector\Injector:
-  Psr\SimpleCache\CacheInterface.ACG_Instagram:
-    factory: SilverStripe\Core\Cache\CacheFactory
-    constructor:
-      namespace: "ACG_Instagram"
-
-Silverstripe\SiteConfig\SiteConfig:
+SilverStripe\SiteConfig\SiteConfig:
   extensions:
-    - AdairCreative\Instagram\AuthControl\Authorize
+    - Prisma\Instagram\SiteConfigExtension
 
 SilverStripe\Control\Director:
   rules:
-    'acg_instagram//$Action': 'AdairCreative\Instagram\AuthControl\Endpoint'
+    'prisma.instagram//$Action': "Prisma\\Instagram\\Controller"
+
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.Prisma.Instagram:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: ".Prisma.Instagram"
