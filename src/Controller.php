@@ -33,6 +33,8 @@ class Controller extends ControlController {
 		$config->Prisma_Instagram_AccessTokenExpiration = time() + 2592000;
 
 		$config->write();
+
+		return $this->redirect("/admin/settings");
 	}
 
 	public function deauthorize(HTTPRequest $request) {

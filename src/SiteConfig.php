@@ -16,8 +16,9 @@ class SiteConfigExtension extends DataExtension {
 		$fields->findOrMakeTab("Root.Instagram", "Instagram");
 
 		$link = Auth::authorizationLink();
+		$text = Auth::valid() ? "Link New Account" : "Link Account";
 
-		$fields->addFieldToTab("Root.Instagram", new LiteralField("Link Account", "<a href=\"$link\" target=\"_blank\">Link Account</a>"));
+		$fields->addFieldToTab("Root.Instagram", new LiteralField("Link Account", "<a href=\"$link\" target=\"_blank\">$text</a>"));
 
 		return $fields;
 	}

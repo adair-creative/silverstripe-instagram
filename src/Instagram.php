@@ -12,10 +12,10 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 class Instagram {
-	public static function getMedia(int $limit = 5): ArrayList {
+	public static function getMedia(int $limit = 5, bool $allowCache = true): ArrayList {
 		$cache = Injector::inst()->get(CacheInterface::class . ".Prisma.Instagram");
 
-		if (Controller::curr()->getRequest()->getVar("flush") !== "all" && $cache->has("expiration") && $cache->get("expiration") > time() && $cache->get("media_count") >= $limit) {
+		if ($allowCache && Controller::curr()->getRequest()->getVar("flush") !== "all" && $cache->has("expiration") && $cache->get("expiration") > time() && $cache->get("media_count") >= $limit) {
 			return $cache->get("media")->limit($limit);
 		}
 		else {
