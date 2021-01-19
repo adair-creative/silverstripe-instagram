@@ -1,7 +1,7 @@
 {
 	"name": "madebyprisma/instagram",
 	"description": "A simple toolkit that allows for one-click CMS integration with Instagram",
-	"license": "AGLP-3.0",
+	"license": "AGPL-3.0-only",
 	"authors": [
 		{
 			"name": "Jesse Solomon",
