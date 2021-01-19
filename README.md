@@ -29,4 +29,12 @@ Prisma\Instagram:
 
 class **Prisma\Instagram**
 
-- static function **getMedia**(*int* **$limit** = *5*) *ArrayList*
+- static function **getMedia**(*int* **$limit** = *5*) *ArrayList\<**Post**\>*
+
+DataObjet **Post**
+
+- **InstagramID**: *Int* - ID of the Post
+- **Type**: `"IMAGE"` `"VIDEO"` `"CAROUSEL_ALBUM"` - Media type, if this post is a child, then it will only be `"IMAGE"` or `"VIDEO"`
+- **URL**: *String* - The URL to the post media
+- **Caption**: *String?* - Caption on the post, may be empty
+- **Children**: *ArrayList\<**Post**\>?* - The posts children, only valid if **Type** is `"CAROUSEL_ALBUM"`

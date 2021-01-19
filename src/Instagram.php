@@ -7,7 +7,6 @@ use Prisma\Instagram\Auth;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
@@ -25,6 +24,7 @@ class Instagram {
 				API::get("/$id", $is_child ? ["fields=media_type,media_url"] : ["fields=media_type,media_url,caption,children"], $media);
 
 				return new ArrayData([
+					"InstagramID" => $id,
 					"Type" => $media->media_type,
 					"URL" => $media->media_url,
 					"Caption" => property_exists($media, "caption") ? $media->caption : "",
@@ -38,11 +38,14 @@ class Instagram {
 				foreach ($json->data as $post) {
 					$posts->add(decodeMedia($post->id, false));
 				}
-			}
 
-			$cache->set("expiration", time() + 43200);
-			$cache->set("media", $posts);
-			$cache->set("media_count", $limit);
+				$cache->set("expiration", time() + 43200);
+				$cache->set("media", $posts);
+				$cache->set("media_count", $limit);
+			}
+			else {
+				user_error("Invalid Instagram authorization, verify the account is connected.", E_USER_ERROR);
+			}
 
 			return $posts;
 		}
