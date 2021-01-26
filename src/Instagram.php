@@ -35,13 +35,18 @@ class Instagram {
 			if (Auth::valid()) {
 				API::get("/me/media", ["fields=id", "limit=$limit"], $json);
 
-				foreach ($json->data as $post) {
-					$posts->add(decodeMedia($post->id, false));
-				}
+				if (property_exists($json, "data")) {
+					foreach ($json->data as $post) {
+						$posts->add(decodeMedia($post->id, false));
+					}
 
-				$cache->set("expiration", time() + 43200);
-				$cache->set("media", $posts);
-				$cache->set("media_count", $limit);
+					$cache->set("expiration", time() + 43200);
+					$cache->set("media", $posts);
+					$cache->set("media_count", $limit);
+				}
+				else {
+					user_error("Instagram API Error, " . json_encode($json), E_USER_ERROR);
+				}
 			}
 			else {
 				user_error("Invalid Instagram authorization, verify the account is connected.", E_USER_ERROR);
