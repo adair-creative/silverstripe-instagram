@@ -27,6 +27,13 @@ class Controller extends ControlController {
 			"code" => $code
 		], $json);
 
+		API::post("/oath/access_token", [
+			"client_id" => Auth::appID(),
+			"client_secret" => Auth::appSecret(),
+			"grant_type" => "ig_exchange_token",
+			"access_token" => $json->access_token
+		], $json);
+
 		$config = SiteConfig::current_site_config();
 
 		$config->Prisma_Instagram_AccessToken = $json->access_token;
