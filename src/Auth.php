@@ -11,7 +11,7 @@ class Auth {
 		$config = SiteConfig::current_site_config();
 
 		if ($config->Prisma_Instagram_AccessTokenExpiration - time() <= 0) {
-			API::get("/refresh_access_token", ["grant_type=ig_refresh_token"], $json);
+			API::get("https://graph.instagram.com/refresh_access_token", ["grant_type=ig_refresh_token", "access_token=" . Auth::accessToken()], $json);
 
 			if (property_exists($json, "access_token")) {
 				$config->Prisma_Instagram_AccessToken = $json->access_token;

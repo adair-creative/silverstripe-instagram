@@ -21,7 +21,7 @@ class Instagram {
 			$posts = new ArrayList([]);
 
 			function decodeMedia(string $id, bool $is_child): ArrayData {
-				API::get("/$id", $is_child ? ["fields=media_type,media_url"] : ["fields=media_type,media_url,caption,children"], $media);
+				API::get("https://graph.instagram.com/$id", $is_child ? ["access_token=" . Auth::accessToken(), "fields=media_type,media_url"] : ["access_token=" . Auth::accessToken(), "fields=media_type,media_url,caption,children"], $media);
 
 				return new ArrayData([
 					"InstagramID" => $id,
@@ -33,7 +33,7 @@ class Instagram {
 			}
 
 			if (Auth::valid()) {
-				API::get("/me/media", ["fields=id", "limit=$limit"], $json);
+				API::get("https://graph.instagram.com/me/media", ["access_token=" . Auth::accessToken(), "fields=id", "limit=$limit"], $json);
 
 				if (property_exists($json, "data")) {
 					foreach ($json->data as $post) {

@@ -4,10 +4,9 @@ namespace Prisma\Instagram;
 
 class API {
 	public static function get(string $url, array $fields = [], &$json): bool {
-		$access_token = Auth::accessToken();
-		$extra_fields = $fields ? implode("&", array_merge(["access_token=$access_token"], $fields)) : "";
+		$extra_fields = $fields ? implode("&", $fields) : "";
 
-		$ch = curl_init("https://graph.instagram.com$url?${extra_fields}");
+		$ch = curl_init("$url?${extra_fields}");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
@@ -36,7 +35,7 @@ class API {
 			array_push($post_fields, "$key=" . urlencode($value));
 		}
 
-		$ch = curl_init("https://api.instagram.com$url");
+		$ch = curl_init("$url");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_POST, true);

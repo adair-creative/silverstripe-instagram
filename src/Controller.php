@@ -18,20 +18,20 @@ class Controller extends ControlController {
 		$host = $request->getHost();
 
 		$code = $request->getVar("code");
+		$secret = Auth::appSecret();
 
-		API::post("/oauth/access_token", [
+		API::post("https://api.instagram.com/oauth/access_token", [
 			"client_id" => Auth::appID(),
-			"client_secret" => Auth::appSecret(),
+			"client_secret" => $secret,
 			"grant_type" => "authorization_code",
 			"redirect_uri" => "https://$host/prisma.instagram/authorize",
 			"code" => $code
 		], $json);
 
-		API::post("/oath/access_token", [
-			"client_id" => Auth::appID(),
-			"client_secret" => Auth::appSecret(),
-			"grant_type" => "ig_exchange_token",
-			"access_token" => $json->access_token
+		API::get("https://graph.instagram.com/access_token", [
+			"client_secret=$secret",
+			"grant_type=ig_exchange_token",
+			"access_token=$json->access_token"
 		], $json);
 
 		$config = SiteConfig::current_site_config();
@@ -41,7 +41,7 @@ class Controller extends ControlController {
 
 		$config->write();
 
-		return $this->redirect("/admin/settings");
+		// return $this->redirect("/admin/settings");
 	}
 
 	public function deauthorize(HTTPRequest $request) {
