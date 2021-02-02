@@ -41,7 +41,7 @@ class Controller extends ControlController {
 
 		$config->write();
 
-		// return $this->redirect("/admin/settings");
+		return $this->redirect("/admin/settings");
 	}
 
 	public function deauthorize(HTTPRequest $request) {
