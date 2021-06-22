@@ -11,13 +11,18 @@ class Auth {
 		$config = SiteConfig::current_site_config();
 
 		if ($config->Prisma_Instagram_AccessTokenExpiration - time() <= 0) {
-			API::get("https://graph.instagram.com/refresh_access_token", ["grant_type=ig_refresh_token", "access_token=" . Auth::accessToken()], $json);
+			if ($config->Prisma_Instagram_AccessToken) {
+				API::get("https://graph.instagram.com/refresh_access_token", ["grant_type=ig_refresh_token", "access_token=" . Auth::accessToken()], $json);
 
-			if (property_exists($json, "access_token")) {
-				$config->Prisma_Instagram_AccessToken = $json->access_token;
-				$config->Prisma_Instagram_AccessTokenExpiration = time() + 2592000;
+				if (property_exists($json, "access_token")) {
+					$config->Prisma_Instagram_AccessToken = $json->access_token;
+					$config->Prisma_Instagram_AccessTokenExpiration = time() + 2592000;
 
-				$config->write();
+					$config->write();
+				}
+				else {
+					return null;
+				}
 			}
 			else {
 				return null;
