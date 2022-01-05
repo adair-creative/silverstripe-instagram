@@ -38,3 +38,4 @@ DataObjet **Post**
 - **URL**: *String* - The URL to the post media
 - **Caption**: *String?* - Caption on the post, may be empty
 - **Children**: *ArrayList\<**Post**\>?* - The posts children, only valid if **Type** is `"CAROUSEL_ALBUM"`
+- **PermaLink**: *String* - The permalink to the post
