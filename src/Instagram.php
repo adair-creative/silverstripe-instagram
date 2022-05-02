@@ -11,6 +11,21 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 class Instagram {
+	public static function getPost($instagramId, $isChild = false): ArrayData {
+		API::get("https://graph.instagram.com/$instagramId", $isChild ? ["access_token=" . Auth::accessToken(), "fields=media_type,media_url,permalink,thumbnail_url,timestamp"] : ["access_token=" . Auth::accessToken(), "fields=media_type,media_url,caption,children,permalink,timestamp"], $media);
+
+		return new ArrayData([
+			"InstagramID" => $instagramId,
+			"Type" => $media->media_type,
+			"ISOTimestamp" => $media->timestamp,
+			"URL" => $media->media_url,
+			"ThumbnailURL" => $media->thumbnail_url,
+			"PermaLink" => $media->permalink,
+			"Caption" => property_exists($media, "caption") ? $media->caption : "",
+			"Children" => property_exists($media, "children") ? new ArrayList(array_map(function ($child) { return self::getPost($child->id, true); }, $media->children->data)) : null
+		]);
+	}
+
 	public static function getMedia(int $limit = 5, bool $allowCache = true): ArrayList {
 		$cache = Injector::inst()->get(CacheInterface::class . ".Prisma.Instagram");
 
@@ -20,27 +35,12 @@ class Instagram {
 		else {
 			$posts = new ArrayList([]);
 
-			function decodeMedia(string $id, bool $is_child): ArrayData {
-				API::get("https://graph.instagram.com/$id", $is_child ? ["access_token=" . Auth::accessToken(), "fields=media_type,media_url,permalink,thumbnail_url,timestamp"] : ["access_token=" . Auth::accessToken(), "fields=media_type,media_url,caption,children,permalink"], $media);
-
-				return new ArrayData([
-					"InstagramID" => $id,
-					"Type" => $media->media_type,
-					"ISOTimestamp" => $media->timestamp,
-					"URL" => $media->media_url,
-					"ThumbnailURL" => $media->thumbnail_url,
-					"PermaLink" => $media->permalink,
-					"Caption" => property_exists($media, "caption") ? $media->caption : "",
-					"Children" => property_exists($media, "children") ? new ArrayList(array_map(function ($child) { return decodeMedia($child->id, true); }, $media->children->data)) : null
-				]);
-			}
-
 			if (Auth::valid()) {
 				API::get("https://graph.instagram.com/me/media", ["access_token=" . Auth::accessToken(), "fields=id", "limit=$limit"], $json);
 
 				if (property_exists($json, "data")) {
 					foreach ($json->data as $post) {
-						$posts->add(decodeMedia($post->id, false));
+						$posts->add(self::getPost($post->id, false));
 					}
 
 					$cache->set("expiration", time() + 43200);
