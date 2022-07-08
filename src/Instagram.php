@@ -12,7 +12,7 @@ use SilverStripe\View\ArrayData;
 
 class Instagram {
 	public static function getPost($instagramId, $isChild = false): ArrayData {
-		API::get("https://graph.instagram.com/$instagramId", $isChild ? ["access_token=" . Auth::accessToken(), "fields=media_type,media_url,permalink,thumbnail_url,timestamp"] : ["access_token=" . Auth::accessToken(), "fields=media_type,media_url,caption,children,permalink,timestamp"], $media);
+		API::get("https://graph.instagram.com/$instagramId", $isChild ? ["access_token=" . Auth::accessToken(), "fields=media_type,media_url,permalink,thumbnail_url,timestamp"] : ["access_token=" . Auth::accessToken(), "fields=media_type,media_url,caption,children,permalink,thumbnail_url,timestamp"], $media);
 
 		return new ArrayData([
 			"InstagramID" => $instagramId,
