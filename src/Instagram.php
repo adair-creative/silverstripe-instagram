@@ -49,11 +49,11 @@ class Instagram {
 					$cache->set("media_count", $limit);
 				}
 				else {
-					return false;
+					return new ArrayList([]);
 				}
 			}
 			else {
-				return false;
+				return new ArrayList([]);
 			}
 
 			return $posts;
