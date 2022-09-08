@@ -2,6 +2,7 @@
 
 namespace Prisma;
 
+use Error;
 use Prisma\Instagram\API;
 use Prisma\Instagram\Auth;
 use Psr\SimpleCache\CacheInterface;
@@ -48,11 +49,11 @@ class Instagram {
 					$cache->set("media_count", $limit);
 				}
 				else {
-					user_error("Instagram API Error, " . json_encode($json), E_USER_ERROR);
+					return false;
 				}
 			}
 			else {
-				user_error("Invalid Instagram authorization, verify the account is connected.", E_USER_ERROR);
+				return false;
 			}
 
 			return $posts;
